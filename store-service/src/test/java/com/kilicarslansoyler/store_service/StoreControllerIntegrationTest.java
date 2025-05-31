@@ -33,6 +33,6 @@ class StoreControllerIntegrationTest {
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertNotNull(response.getBody());
-        assertTrue(response.getBody().size() > 0);
+        assertFalse(response.getBody().isEmpty());
     }
 }

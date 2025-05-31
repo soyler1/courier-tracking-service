@@ -25,7 +25,7 @@ class StoreQueryServiceImplTest {
 
         // Assert
         assertEquals(1, result.size());
-        assertEquals("Store A", result.get(0).getName());
+        assertEquals("Store A", result.getFirst().getName());
         verify(mockCache, times(1)).getStores();
     }
 }
