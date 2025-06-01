@@ -1,7 +1,9 @@
 package com.kilicarslansoyler.tracking_service.domain.service;
 
+import com.kilicarslansoyler.tracking_service.common.exception.StoreServiceUnavailableException;
 import com.kilicarslansoyler.tracking_service.domain.model.Store;
 import com.kilicarslansoyler.tracking_service.adapter.out.store.StoreServiceClient;
+import feign.FeignException;
 import jakarta.annotation.PostConstruct;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -33,8 +35,9 @@ public class StoreCacheService {
         try {
             cachedStores = storeServiceClient.getAllStores();
             log.info("Store cache updated with {} stores.", cachedStores.size());
-        } catch (Exception e) {
+        } catch (FeignException e) {
             log.error("Failed to refresh store cache", e);
+            throw new StoreServiceUnavailableException("Store service is not available", e);
         }
     }
 

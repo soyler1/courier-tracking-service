@@ -1,5 +1,6 @@
 package com.kilicarslansoyler.tracking_service.domain.service;
 
+import com.kilicarslansoyler.tracking_service.common.exception.LocationNotFoundException;
 import com.kilicarslansoyler.tracking_service.domain.model.CourierLocation;
 import com.kilicarslansoyler.tracking_service.domain.repository.CourierLocationRepository;
 import lombok.RequiredArgsConstructor;
@@ -22,7 +23,13 @@ public class CourierLocationService {
                 .sorted(Comparator.comparing(CourierLocation::getTimestamp))
                 .toList();
 
-        if (locations.size() < 2) return 0.0;
+        if (locations.isEmpty()) {
+            throw new LocationNotFoundException(courierId);
+        }
+
+        if (locations.size() < 2) {
+            return 0.0;
+        }
 
         double total = 0.0;
         for (int i = 1; i < locations.size(); i++) {

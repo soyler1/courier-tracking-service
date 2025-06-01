@@ -6,9 +6,13 @@ import com.kilicarslansoyler.tracking_service.adapter.in.web.mapper.CourierLocat
 import com.kilicarslansoyler.tracking_service.application.port.in.CourierLocationUseCase;
 import com.kilicarslansoyler.tracking_service.domain.model.CourierLocation;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.ErrorResponse;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -28,7 +32,16 @@ public class CourierLocationController {
     }
 
     @GetMapping("/{courierId}/distance")
-    @Operation(summary = "Get total travel distance", description = "Calculates total distance a courier has traveled.")
+    @Operation(
+            summary = "Get total travel distance",
+            description = "Calculates total distance a courier has traveled.",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Total distance calculated successfully"),
+                    @ApiResponse(responseCode = "404", description = "Courier location data not found",
+                            content = @Content(mediaType = "application/json",
+                                    schema = @Schema(implementation = ErrorResponse.class)))
+            }
+    )
     public ResponseEntity<Double> getTotalDistance(@PathVariable Long courierId) {
         return ResponseEntity.ok(useCase.getTotalTravelDistance(courierId));
     }
