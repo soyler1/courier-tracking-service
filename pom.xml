@@ -19,6 +19,7 @@
 
     <modules>
         <module>store-service</module>
+        <module>tracking-service</module>
     </modules>
 
     <build>
@@ -49,6 +50,4 @@
             </plugin>
         </plugins>
     </build>
-
-
 </project>
