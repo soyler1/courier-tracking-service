@@ -92,8 +92,8 @@ class EntryLog {
 1. Clone the repository
 
 ```bash
-git clone https://github.com/your-repo/courier-tracking.git
-cd courier-tracking
+git clone https://github.com/soyler1/courier-tracking-service
+cd courier-tracking-service
 ```
 
 2. Build the JAR files manually (if not using multi-stage Dockerfiles):
