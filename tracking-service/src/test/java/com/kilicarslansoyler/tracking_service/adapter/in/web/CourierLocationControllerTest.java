@@ -2,6 +2,7 @@ package com.kilicarslansoyler.tracking_service.adapter.in.web;
 
 import com.kilicarslansoyler.tracking_service.adapter.in.web.dto.CourierLocationRequestDTO;
 import com.kilicarslansoyler.tracking_service.adapter.in.web.dto.CourierLocationResponseDTO;
+import com.kilicarslansoyler.tracking_service.adapter.in.web.dto.TotalDistanceResponseDTO;
 import com.kilicarslansoyler.tracking_service.adapter.in.web.mapper.CourierLocationWebMapper;
 import com.kilicarslansoyler.tracking_service.application.port.in.CourierLocationUseCase;
 import com.kilicarslansoyler.tracking_service.domain.model.CourierLocation;
@@ -73,14 +74,16 @@ class CourierLocationControllerTest {
     @Test
     void shouldGetTotalTravelDistance() {
         Long courierId = 1L;
-        double expectedDistance = 1234.56;
+        double expectedDistanceMeters = 1234.56; // 1.234 km
+        String expectedFormatted = "1,23 km";
+        TotalDistanceResponseDTO expectedResponse = new TotalDistanceResponseDTO(expectedFormatted);
 
-        when(useCase.getTotalTravelDistance(courierId)).thenReturn(expectedDistance);
+        when(useCase.getTotalTravelDistance(courierId)).thenReturn(expectedDistanceMeters);
 
-        ResponseEntity<Double> response = controller.getTotalDistance(courierId);
+        ResponseEntity<TotalDistanceResponseDTO> response = controller.getTotalDistance(courierId);
 
         assertEquals(200, response.getStatusCodeValue());
-        assertEquals(expectedDistance, response.getBody());
+        assertEquals(expectedResponse.getTotalDistanceTravelled(), response.getBody().getTotalDistanceTravelled());
         verify(useCase).getTotalTravelDistance(courierId);
     }
 }

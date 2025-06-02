@@ -19,7 +19,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import static org.hamcrest.Matchers.closeTo;
+import static org.hamcrest.Matchers.matchesPattern;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -49,7 +49,6 @@ class CourierLocationControllerIT {
     void setUp() {
         locationRepository.deleteAll();
 
-        // Manuel olarak mock davranışı ayarlanıyor
         when(storeClient.getAllStores()).thenReturn(List.of(
                 new Store("Dummy Store", 0.0, 0.0)
         ));
@@ -65,16 +64,20 @@ class CourierLocationControllerIT {
 
         mockMvc.perform(post("/api/locations")
                         .contentType(MediaType.APPLICATION_JSON)
+                        .header("X-Api-Gateway", "true")
                         .content(objectMapper.writeValueAsString(location1)))
                 .andExpect(status().isOk());
 
         mockMvc.perform(post("/api/locations")
                         .contentType(MediaType.APPLICATION_JSON)
+                        .header("X-Api-Gateway", "true")
                         .content(objectMapper.writeValueAsString(location2)))
                 .andExpect(status().isOk());
 
-        mockMvc.perform(get("/api/locations/" + courierId + "/distance"))
+        mockMvc.perform(get("/api/locations/" + courierId + "/distance")
+                        .header("X-Api-Gateway", "true"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$").value(closeTo(800.0, 200.0)));
+                .andExpect(jsonPath("$.totalDistanceTravelled").value(matchesPattern("^\\d+[.,]\\d{2} km$")));
+
     }
 }

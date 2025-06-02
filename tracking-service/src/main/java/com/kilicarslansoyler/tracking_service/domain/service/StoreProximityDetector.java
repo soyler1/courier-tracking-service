@@ -10,7 +10,6 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
 import java.time.Duration;
-import java.time.LocalDateTime;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -36,14 +35,15 @@ public class StoreProximityDetector {
             if (distance <= entryDistanceThreshold) {
                 boolean eligible = cacheService.isEligibleToLogEntry(
                         location.getCourierId(), store.getName(),
-                        Duration.ofSeconds(entryCooldownSeconds)
+                        Duration.ofSeconds(entryCooldownSeconds),
+                        location.getTimestamp()
                 );
 
                 if (eligible) {
                     cacheService.updateEntryTime(
                             location.getCourierId(),
                             store.getName(),
-                            LocalDateTime.now()
+                            location.getTimestamp()
                     );
 
                     eventPublisher.publishEvent(new CourierEnteredStoreEvent(

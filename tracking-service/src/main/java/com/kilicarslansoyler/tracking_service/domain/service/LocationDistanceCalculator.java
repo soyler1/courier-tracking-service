@@ -8,12 +8,10 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class LocationDistanceCalculator {
 
-    @Value("${tracking.earth-radius:6371000}") // metre cinsinden, default 6371 km
+    @Value("${tracking.earth-radius:6371000}")
     private double earthRadius;
 
-    /**
-     * İki nokta arasındaki mesafeyi haversine formülü ile hesaplar (metre cinsinden).
-     */
+
     public double calculate(double lat1, double lon1, double lat2, double lon2) {
         double dLat = Math.toRadians(lat2 - lat1);
         double dLon = Math.toRadians(lon2 - lon1);

@@ -2,6 +2,7 @@ package com.kilicarslansoyler.tracking_service.adapter.in.web;
 
 import com.kilicarslansoyler.tracking_service.adapter.in.web.dto.CourierLocationRequestDTO;
 import com.kilicarslansoyler.tracking_service.adapter.in.web.dto.CourierLocationResponseDTO;
+import com.kilicarslansoyler.tracking_service.adapter.in.web.dto.TotalDistanceResponseDTO;
 import com.kilicarslansoyler.tracking_service.adapter.in.web.mapper.CourierLocationWebMapper;
 import com.kilicarslansoyler.tracking_service.application.port.in.CourierLocationUseCase;
 import com.kilicarslansoyler.tracking_service.domain.model.CourierLocation;
@@ -42,7 +43,11 @@ public class CourierLocationController {
                                     schema = @Schema(implementation = ErrorResponse.class)))
             }
     )
-    public ResponseEntity<Double> getTotalDistance(@PathVariable Long courierId) {
-        return ResponseEntity.ok(useCase.getTotalTravelDistance(courierId));
+    public ResponseEntity<TotalDistanceResponseDTO> getTotalDistance(@PathVariable Long courierId) {
+        double totalInMeters = useCase.getTotalTravelDistance(courierId);
+        double km = totalInMeters / 1000.0;
+
+        String formatted = String.format("%.2f km", km);
+        return ResponseEntity.ok(new TotalDistanceResponseDTO(formatted));
     }
 }
