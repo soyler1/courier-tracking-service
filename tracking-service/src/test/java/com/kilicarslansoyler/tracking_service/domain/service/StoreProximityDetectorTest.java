@@ -52,7 +52,7 @@ class StoreProximityDetectorTest {
         when(distanceCalculator.calculate(anyDouble(), anyDouble(), anyDouble(), anyDouble()))
                 .thenReturn(50.0);
 
-        when(cacheService.isEligibleToLogEntry(eq(1L), eq("Test Store"), any()))
+        when(cacheService.isEligibleToLogEntry(eq(1L), eq("Test Store"), any(), any(LocalDateTime.class)))
                 .thenReturn(true);
 
         detector.detect(location, List.of(store));
@@ -95,7 +95,7 @@ class StoreProximityDetectorTest {
         when(distanceCalculator.calculate(anyDouble(), anyDouble(), anyDouble(), anyDouble()))
                 .thenReturn(50.0);
 
-        when(cacheService.isEligibleToLogEntry(eq(2L), eq("Cooldown Store"), any()))
+        when(cacheService.isEligibleToLogEntry(eq(2L), eq("Cooldown Store"), any(), any(LocalDateTime.class)))
                 .thenReturn(false); // henüz tekrar girişe izin yok
 
         detector.detect(location, List.of(store));

@@ -1,6 +1,7 @@
 package com.kilicarslansoyler.tracking_service.infrastructure.cache;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
@@ -10,6 +11,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.Optional;
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class RedisCacheService {
 
     private static final DateTimeFormatter formatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
@@ -26,13 +28,15 @@ public class RedisCacheService {
         redisTemplate.opsForValue().set(key, timestamp.format(formatter));
     }
 
-    public boolean isEligibleToLogEntry(Long courierId, String storeName, Duration cooldown) {
+    public boolean isEligibleToLogEntry(Long courierId, String storeName, Duration cooldown, LocalDateTime referenceTime) {
         return getLastEntryTime(courierId, storeName)
-                .map(last -> last.plus(cooldown).isBefore(LocalDateTime.now()))
+                .map(last -> last.plus(cooldown).isBefore(referenceTime))
                 .orElse(true);
     }
 
     private String buildKey(Long courierId, String storeName) {
-        return "entrylog:" + courierId + ":" + storeName.replace(" ", "_");
+        String key = "entrylog:" + courierId + ":" + storeName.replace(" ", "_");
+        log.info("Redis Entry Key = {}", key);
+        return key;
     }
 }

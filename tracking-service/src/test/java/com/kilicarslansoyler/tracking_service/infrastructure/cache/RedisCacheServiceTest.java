@@ -62,7 +62,7 @@ class RedisCacheServiceTest {
     void shouldBeEligibleIfNoPreviousEntry() {
         when(valueOperations.get(anyString())).thenReturn(null);
 
-        boolean eligible = redisCacheService.isEligibleToLogEntry(1L, "Test Store", Duration.ofSeconds(60));
+        boolean eligible = redisCacheService.isEligibleToLogEntry(1L, "Test Store", Duration.ofSeconds(60), LocalDateTime.now());
 
         assertTrue(eligible);
     }
@@ -72,7 +72,7 @@ class RedisCacheServiceTest {
         LocalDateTime past = LocalDateTime.now().minusMinutes(2);
         when(valueOperations.get(anyString())).thenReturn(past.format(formatter));
 
-        boolean eligible = redisCacheService.isEligibleToLogEntry(1L, "Test Store", Duration.ofSeconds(60));
+        boolean eligible = redisCacheService.isEligibleToLogEntry(1L, "Test Store", Duration.ofSeconds(60), LocalDateTime.now());
 
         assertTrue(eligible);
     }
@@ -82,7 +82,7 @@ class RedisCacheServiceTest {
         LocalDateTime recent = LocalDateTime.now().minusSeconds(30);
         when(valueOperations.get(anyString())).thenReturn(recent.format(formatter));
 
-        boolean eligible = redisCacheService.isEligibleToLogEntry(1L, "Test Store", Duration.ofSeconds(60));
+        boolean eligible = redisCacheService.isEligibleToLogEntry(1L, "Test Store", Duration.ofSeconds(60), LocalDateTime.now());
 
         assertFalse(eligible);
     }
