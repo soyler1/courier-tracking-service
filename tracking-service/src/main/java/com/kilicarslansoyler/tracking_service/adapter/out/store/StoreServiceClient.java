@@ -8,9 +8,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import java.util.List;
 
 @Profile("!test")
-@FeignClient(name = "store-service", url = "${store-service.url}")
+@FeignClient(name = "storeService", url = "${store-service.url}")
 public interface StoreServiceClient {
 
-    @GetMapping("/api/stores")
+    @GetMapping(value = "/api/stores", headers = "X-Internal-Request=tracking-service")
     List<Store> getAllStores();
 }
+

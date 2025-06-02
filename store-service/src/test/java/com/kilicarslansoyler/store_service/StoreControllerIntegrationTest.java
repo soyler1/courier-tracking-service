@@ -24,10 +24,15 @@ class StoreControllerIntegrationTest {
     void getAllStores_shouldReturnStoreList() {
         String url = "http://localhost:" + port + "/api/stores";
 
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("X-Internal-Request", "tracking-service"); // interceptor için gerekli header
+
+        HttpEntity<Void> entity = new HttpEntity<>(headers);
+
         ResponseEntity<List<Store>> response = restTemplate.exchange(
                 url,
                 HttpMethod.GET,
-                null,
+                entity,
                 new ParameterizedTypeReference<>() {}
         );
 
@@ -35,4 +40,5 @@ class StoreControllerIntegrationTest {
         assertNotNull(response.getBody());
         assertFalse(response.getBody().isEmpty());
     }
+
 }
